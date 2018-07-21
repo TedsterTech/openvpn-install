@@ -32,7 +32,15 @@ elif [[ -e /etc/centos-release || -e /etc/redhat-release ]]; then
 	RCLOCAL='/etc/rc.d/rc.local'
 else
 	echo "Looks like you aren't running this installer on Debian, Ubuntu or CentOS"
-	exit
+	echo "Trying Arch detection"
+	if [[ -e /etc/arch-release ]]; then
+		echo "Arch!"
+		OS=arch
+		GROUPNAME=nobody
+		RCLOCAL='/etc/rc.local'
+	else
+		echo "Not Arch"
+	fi
 fi
 
 newclient () {
@@ -150,6 +158,9 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 				fi
 				if [[ "$OS" = 'debian' ]]; then
 					apt-get remove --purge -y openvpn
+				else if [[ "$OS" = 'arch' ]]; then
+					# again, this will be attended for now
+					yaourt -Rsn openvpn
 				else
 					yum remove openvpn -y
 				fi
@@ -219,6 +230,10 @@ else
 	if [[ "$OS" = 'debian' ]]; then
 		apt-get update
 		apt-get install openvpn iptables openssl ca-certificates -y
+	else if [[ "$OS" = 'arch' ]]; then
+		# This will need to be attended at the moment...
+		yaourt -S rc-local openvpn iptables openssl ca-certificates
+		systemctl enable rc-local.service
 	else
 		# Else, the distro is CentOS
 		yum install epel-release -y
