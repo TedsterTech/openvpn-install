@@ -1,6 +1,6 @@
 if [[ -e /etc/arch-release ]]; then
 	echo "Arch!"
-	OS=debian
+	OS=arch
 	GROUPNAME=nobody
 	RCLOCAL='/etc/rc.local'
 else
