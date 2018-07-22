@@ -232,6 +232,8 @@ else
 		apt-get install openvpn iptables openssl ca-certificates -y
 	else if [[ "$OS" = 'arch' ]]; then
 		# This will need to be attended at the moment...
+		# Install yaourt
+		yes | pacman -S yaourt
 		yaourt -S rc-local openvpn iptables openssl ca-certificates
 		systemctl enable rc-local.service
 	else
